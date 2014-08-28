@@ -13,4 +13,4 @@
 (defmethod username-exists-p ((user-repo user-repository) username)
   (find-if (lambda (user)
 	     (string= username (username user)))
-	   (repository::data user-repo)))
+	   (data user-repo)))

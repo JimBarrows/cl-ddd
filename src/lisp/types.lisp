@@ -1,13 +1,7 @@
-(defvar *available-locales* (list
-			     (make-instance 'locale 
-					    :language "English" 
-					    :language-code "EN" 
-					    :region-code "us" )))
-
 (defclass locale ()
-  ((language :initarg language)
-   (language-code :initarg language-code)
-   (region-code :initarg region-code)
+  ((language :initarg :language)
+   (language-code :initarg :language-code)
+   (region-code :initarg :region-code)
    (script-code)
    (variant-code)
    (extension)
@@ -18,11 +12,17 @@
    (number-format)
    (decimal-format)))
 
+(defvar *available-locales* (list
+			     (make-instance 'locale 
+					    :language "English" 
+					    :language-code "EN" 
+					    :region-code "us" )))
+
 (defclass money()
   ((locale :type 'locale :initarg locale)
    (value :type floating-point-number :initarg value)))
     
-(defclass government-id())
+;(defclass government-id())
 
 (defclass social-security-number ()
   ((first-three)

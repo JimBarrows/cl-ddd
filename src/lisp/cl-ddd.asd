@@ -1,17 +1,18 @@
 (asdf:defsystem #:cl-ddd
     :serial t
-    :depends-on (#:hunchentoot
-		 #:restas
-		 #:parenscript
-		 #:cl-json
-		 #:cl-store
+    :depends-on (#:cl-store
 		 #:uuid)
     :components (
 		 (:file "package")
-		 (:file "configuration")
 		 (:file "types")
 		 (:file "entity")
 		 (:file "authentication-entities")
 		 (:file "authentication-services")
-		 (:file "authentication-json-endpoint")
-		 (:file "bootstrap")))
+		 (:file "authentication-json-endpoint")))
+
+(asdf:defsystem #:cl-ddd-test
+    :serial t
+    :depends-on (:fiveam
+		 :cl-store)
+    :components ((:file "test/package")
+		 (:file "test/entity-test")))

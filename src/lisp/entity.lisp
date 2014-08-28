@@ -1,5 +1,8 @@
 (in-package :cl-ddd)
 
+(defun entity-ids-equal-? (left right)
+  (uuid= (id left) (id right)))
+
 (defmacro defentity (classname superclasses slots &rest options)
   (let* ((repo-name-string 
 	  (string-upcase
@@ -23,10 +26,13 @@
        (defclass ,repo-name ,() ,(list
 				  '( data :initform '() :reader data)
 				  `( storage-name :initform ,repo-file-name)))
-       (defmethod add ((repo ,repo-name) (entity ,classname))
+       (defmethod add-entity ((repo ,repo-name) (entity ,classname))
 	 (push entity (slot-value repo 'data)))
-       (defmethod exist-p((repo ,repo-name) (entity ,classname))
-	 (member entity (data repo)))
+       (defmethod remove-entity ((repo ,repo-name) (entity ,classname))
+	 (delete entity (data repo) 
+		 :test #'entity-ids-equal-?))
+       (defmethod entity-exists-?((repo ,repo-name) (entity ,classname))
+	 (member entity (data repo) :test #'entity-ids-equal-?))
        (defmethod find-by-id((repo ,repo-name) (id-to-find uuid))
 	 (find-if (lambda (item)
 		    (uuid:uuid= id-to-find (id item)))
@@ -38,3 +44,5 @@
 	   (setf (slot-value repo 'data) (restore ,repo-file-name))))
        (defmethod save-data((repo ,repo-name))
 	 (store (slot-value repo 'data) ,repo-file-name)))))
+
+
