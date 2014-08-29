@@ -1,3 +1,5 @@
+(in-package :cl-ddd)
+
 (defclass locale ()
   ((language :initarg :language)
    (language-code :initarg :language-code)
@@ -12,19 +14,7 @@
    (number-format)
    (decimal-format)))
 
-(defvar *available-locales* (list
-			     (make-instance 'locale 
-					    :language "English" 
-					    :language-code "EN" 
-					    :region-code "us" )))
-
 (defclass money()
   ((locale :type 'locale :initarg locale)
    (value :type floating-point-number :initarg value)))
     
-;(defclass government-id())
-
-(defclass social-security-number ()
-  ((first-three)
-   (second-two)
-   (last-four)))
