@@ -5,27 +5,27 @@
 (in-suite service-test-suite)
 
 (defmacro with-service(body)
-  `(let((service (defservice( test-service 
-			      :request-fields ((field1)
-					       (field2))
-			      :response-fields ((field3)
-					       (field4))
-			      :validations ((:field1 '(lambda( field1) (not nil-p field1)))
-					    (:field2 '(lambda( field2) (not nil-p field2)))
-					    (:request '(lambda( request) ( not nil-p request))))
-			      :body (lambda (field1 field2 response) ((setf (field3 response) field1)
-								      (setf (field4 response) field2)
-								      response))))))
-    ,@body))
+  `(progn 
+     (defservice test-service 
+	 :request-fields ((field1)
+			  (field2))
+	 :response-fields ((field3)
+			   (field4))
+	 :body ((setf (field3 cl-ddd::response) (field1 test-service-request))
+		(setf (field4 cl-ddd::response) (field2 test-service-request))))
+     ,@body))
 
 (test service-macro-creates-request-class
-  (skip "Not create yet"))
+  (with-service
+      ((finishes (make-instance 'test-service-request :field1 "hello" :field2 "goodby")))))
 
 (test serivce-macro-creates-response-class
-  (skip "Not created yet"))
-
-(test service-macro-validates-request-object
-  (skip "not created yet"))
+  (with-service
+      ((finishes (make-instance 'test-service-response :field3 "hello" :field4 "goodby")))))
 
 (test service-macro-calls-body-code
-  (skip "not create yet"))
+  (with-service
+      ((let ((service-response (test-service (make-instance 'test-service-request :field1 "hello" 
+							    :field2 "goodbye"))))
+	 (is (and (string= (field3 service-response) "hello")
+		  (string= (field4 service-response) "goodbye")))))))
