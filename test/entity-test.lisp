@@ -13,10 +13,53 @@
 	 (test-entity-1 (make-instance 'test-entity)))
      ,@body))
 
+(test add-method-is-add-test-entity
+  (is-true (find-method #'add-test-entity
+			'()
+			(mapcar #'find-class '(test-entity-repository test-entity))
+			nil)))
+
+(test remove-method-is-remove-test-entity
+  (is-true (find-method #'remove-test-entity
+			'()
+			(mapcar #'find-class '(test-entity-repository test-entity))
+			nil)))
+
+(test entity-exists-method-is-test-entity-exists-?
+  (is-true (find-method #'test-entity-exists-?
+			'()
+			(mapcar #'find-class '(test-entity-repository test-entity))
+			nil)))
+
+(test find-by-id-method-is-find-test-entity-by-id
+  (is-true (find-method #'find-test-entity-by-id
+			'()
+			(mapcar #'find-class '(test-entity-repository test-entity))
+			nil)))
+
+(test list-data-method-is-list-test-entity
+  (is-true ( find-method #'list-test-entity
+			 '()
+			 (mapcar #'find-class '(test-entity-repository test-entity))
+			 nil)))
+
+(test load-data-method-is-load-test-entity-data
+  (is-true (find-method #'load-test-entity-data
+			'()
+			(mapcar #'find-class '(test-entity-repository test-entity))
+			nil)))
+
+(test save-data-method-is-save-test-entity-data
+  (is-true (find-emthod #'save-test-entity-data
+			'()
+			(mapcar #'find-class '(test-entity-repository test-entity))
+			nil)))
+
 (test can-add-entity-to-repository
       (with-repository
 	  ((add-entity repo test-entity-1)
 	   (is (= 1 (list-length (list-data repo)))))))
+
 
 (test can-update-entity-in-repository
       (with-repository ((add-entity repo test-entity-1)
@@ -58,3 +101,4 @@
 (test can-determine-if-entity-is-in-repo
       (with-repository ((add-entity repo test-entity-1)
 			(is-true (entity-exists-? repo test-entity-1 )))))
+
