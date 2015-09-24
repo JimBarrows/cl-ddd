@@ -9,6 +9,22 @@
 	   (concatenate 'string (string classname) "-repository")))
 	 (repo-name 
 	  (intern repo-name-string))
+	 (add-entity-method-name
+	  (intern
+	   (string-upcase
+	    (concatenate 'string "add-" (string classname)))))
+	 (remove-entity-method-name
+	  (intern
+	   (string-upcase
+	    (concatenate 'string "remove-" (string classname)))))
+	 (entity-exists-method-name
+	  (intern
+	   (string-upcase
+	    (concatenate 'string (string classname) "-exists-?"))))
+	 (find-by-id-method-name
+	  (intern
+	   (string-upcase
+	    (concatenate 'string "find-" (string classname) "-by-id"))))
 	 (repo-file-name 
 	  (concatenate 'string repo-name-string ".data")))
     (push '(id :initform (uuid::make-v4-uuid) :initarg :id :accessor id) slots)
@@ -26,14 +42,14 @@
        (defclass ,repo-name ,() ,(list
 				  '( data :initform '() :reader data)
 				  `( storage-name :initform ,repo-file-name)))
-       (defmethod add-entity ((repo ,repo-name) (entity ,classname))
+       (defmethod ,add-entity-method-name ((repo ,repo-name) (entity ,classname))
 	 (push entity (slot-value repo 'data)))
-       (defmethod remove-entity ((repo ,repo-name) (entity ,classname))
+       (defmethod ,remove-entity-method-name ((repo ,repo-name) (entity ,classname))
 	 (delete entity (data repo) 
 		 :test #'entity-ids-equal-?))
-       (defmethod entity-exists-?((repo ,repo-name) (entity ,classname))
+       (defmethod ,entity-exists-method-name ((repo ,repo-name) (entity ,classname))
 	 (member entity (data repo) :test #'entity-ids-equal-?))
-       (defmethod find-by-id((repo ,repo-name) (id-to-find uuid))
+       (defmethod ,find-by-id-method-name ((repo ,repo-name) (id-to-find uuid))
 	 (find-if (lambda (item)
 		    (uuid:uuid= id-to-find (id item)))
 		  (data repo)))
