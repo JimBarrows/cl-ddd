@@ -3,12 +3,19 @@
 (defun entity-ids-equal-? (left right)
   (uuid= (id left) (id right)))
 
+(defun repository-name (entity-name)
+  (intern
+   (string-upcase
+    (concatenate 'string (string entity-name) "-repository"))))
+
+(defun data-file (entity-name)
+  (string-downcase
+   (concatenate 'string (string entity-name) "-repository.data")))
+  
 (defmacro defentity (classname superclasses slots &rest options)
-  (let* ((repo-name-string 
-	  (string-upcase
-	   (concatenate 'string (string classname) "-repository")))
+  (let* (
 	 (repo-name 
-	  (intern repo-name-string))
+	  (repository-name classname))
 	 (add-entity-method-name
 	  (intern
 	   (string-upcase
@@ -26,7 +33,7 @@
 	   (string-upcase
 	    (concatenate 'string "find-" (string classname) "-by-id"))))
 	 (repo-file-name 
-	  (concatenate 'string repo-name-string ".data")))
+	  (data-file classname)))
     (push '(id :initform (uuid::make-v4-uuid) :initarg :id :accessor id) slots)
     `(progn 
        (defclass ,classname ,superclasses

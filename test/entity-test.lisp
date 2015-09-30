@@ -8,10 +8,6 @@
   ((slot1 )
    (slot2 )))
 
-(macroexpand-1 '(cl-ddd::defentity test-entity()
-  ((slot1 )
-   (slot2 ))))
-
 (defmacro with-repository (body)
   `(let ((repo (make-instance 'test-entity-repository))
 	 (test-entity-1 (make-instance 'test-entity)))
