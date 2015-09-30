@@ -13,6 +13,7 @@
   :components ((:file "package")
                (:file "types")
                (:file "entity")
+               (:file "api")
                (:file "constants")))
 
 (defsystem "cl-ddd-test"
