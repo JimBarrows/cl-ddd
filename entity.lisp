@@ -11,29 +11,52 @@
 (defun data-file (entity-name)
   (string-downcase
    (concatenate 'string (string entity-name) "-repository.data")))
-  
+
+(defun add-entity-method (entity-name)
+  (intern
+   (string-upcase
+    (concatenate 'string "add-" (string entity-name)))))
+
+(defun remove-entity-method( entity-name)
+  (intern
+   (string-upcase
+    (concatenate 'string "remove-" (string entity-name)))))
+
+(defun entity-exists-method( entity-name)
+  (intern
+   (string-upcase
+    (concatenate 'string (string entity-name) "-exists-?"))))
+
+(defun find-by-id-method( entity-name)
+  (intern
+   (string-upcase
+    (concatenate 'string "find-" (string entity-name) "-by-id"))))
+
+(defun find-all-method( entity-name)
+  (intern
+   (string-upcase
+    (concatenate 'string "find-all-" (string entity-name)))))
+
+(defun initialize-repository-method( entity-name)
+  (intern
+   (string-upcase
+    (concatenate 'string "initialize-" (string entity-name) "-repository"))))
+
+(defun shutdown-repository-method( entity-name)
+  (intern
+   (string-upcase
+    (concatenate 'string "shutdown-" (string entity-name) "-repository"))))
+
 (defmacro defentity (classname superclasses slots &rest options)
-  (let* (
-	 (repo-name 
-	  (repository-name classname))
-	 (add-entity-method-name
-	  (intern
-	   (string-upcase
-	    (concatenate 'string "add-" (string classname)))))
-	 (remove-entity-method-name
-	  (intern
-	   (string-upcase
-	    (concatenate 'string "remove-" (string classname)))))
-	 (entity-exists-method-name
-	  (intern
-	   (string-upcase
-	    (concatenate 'string (string classname) "-exists-?"))))
-	 (find-by-id-method-name
-	  (intern
-	   (string-upcase
-	    (concatenate 'string "find-" (string classname) "-by-id"))))
-	 (repo-file-name 
-	  (data-file classname)))
+  (let* ((repo-name (repository-name classname))
+	 (add-entity-method-name (add-entity-method classname))
+	 (remove-entity-method-name (remove-entity-method classname))
+	 (entity-exists-method-name (entity-exists-method classname))
+	 (find-by-id-method-name (find-by-id-method classname))
+	 (repo-file-name (data-file classname))
+         (find-all-method-name (find-all-method classname))
+         (initialize-repository-method-name (initialize-repository-method classname))
+         (shutdown-repository-method-name (shutdown-repository-method classname)))
     (push '(id :initform (uuid::make-v4-uuid) :initarg :id :accessor id) slots)
     `(progn 
        (defclass ,classname ,superclasses
@@ -60,12 +83,12 @@
 	 (find-if (lambda (item)
 		    (uuid:uuid= id-to-find (id item)))
 		  (data repo)))
-       (defmethod list-data((repo ,repo-name))
+       (defmethod ,find-all-method-name ((repo ,repo-name))
 	 (data repo))
-       (defmethod load-data ((repo ,repo-name))
+       (defmethod ,initialize-repository-method-name ((repo ,repo-name))
 	 (when (probe-file ,repo-file-name)
 	   (setf (slot-value repo 'data) (restore ,repo-file-name))))
-       (defmethod save-data((repo ,repo-name))
+       (defmethod ,shutdown-repository-method-name ((repo ,repo-name))
 	 (store (slot-value repo 'data) ,repo-file-name)))))
 
 
