@@ -11,8 +11,7 @@
                "uuid"
                "alexandria"
                "ningle"
-               "cl-json"
-               "clack")
+               "cl-json")
   :components ((:file "package")
                (:file "types")
                (:file "entity")
