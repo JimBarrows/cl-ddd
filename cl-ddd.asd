@@ -9,7 +9,9 @@
            :serial t
   :depends-on ("cl-store"
                "uuid"
-               "alexandria")
+               "alexandria"
+               "ningle"
+               "cl-json")
   :components ((:file "package")
                (:file "types")
                (:file "entity")
@@ -19,10 +21,15 @@
 (defsystem "cl-ddd-test"
            :serial t
   :depends-on ("fiveam"
-               "cl-store")
+               "cl-store"
+               "drakma")
   :components ((:module "test"
                         :serial t
 			:components (
-                        (:file "package")
-                        (:file "entity-test")
-                        (:file "service-test")))))
+                                     (:file "package")
+                                     (:file "test-suites")
+                                     (:file "fixtures")
+                                     (:file "entity-test")
+                                     ;;(:file "service-test")
+                                     ;;(:file "api-test")
+                                     ))))

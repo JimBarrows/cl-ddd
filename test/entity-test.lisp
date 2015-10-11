@@ -3,55 +3,55 @@
 
 (in-suite entity-test-suite)
 
-(cl-ddd::defentity test-entity()
-  ((slot1 )
-   (slot2 )))
+(cl-ddd:defentity test-entity ()
+       ((slot1 )
+        (slot2 )))
 
 (defmacro with-repository (body)
-  `(let ((repo (make-instance 'test-entity-repository))
-	 (test-entity-1 (make-instance 'test-entity)))
+  `(let ((test-entity-1 (make-instance 'test-entity))
+         (*test-entity-repository* (make-instance 'test-entity-repository)))
      ,@body))
 
-(test add-method-is-add-test-entity
+(test create-method-is-add-test-entity
   (is-true (find-method #'add-test-entity
 			'()
 			(mapcar #'find-class '(test-entity-repository test-entity))
 			nil)))
 
-(test remove-method-is-remove-test-entity
-  (is-true (find-method #'remove-test-entity
-			'()
-			(mapcar #'find-class '(test-entity-repository test-entity))
-			nil)))
-
-(test entity-exists-method-is-test-entity-exists-?
+(test read-for-existence-method-is-test-entity-exists-?
   (is-true (find-method #'test-entity-exists-?
 			'()
 			(mapcar #'find-class '(test-entity-repository test-entity))
 			nil)))
 
-(test find-by-id-method-is-find-test-entity-by-id
+(test read-by-id-method-is-find-test-entity-by-id
   (is-true (find-method #'find-test-entity-by-id
 			'()
-			(mapcar #'find-class '(test-entity-repository uuid))
+			(mapcar #'find-class '(test-entity-repository uuid:uuid))
 			nil)))
 
-(test list-data-method-is-list-test-entity
-  (is-true ( find-method #'list-test-entity
+(test read-all-method-is-find-all-test-entity
+  (is-true ( find-method #'find-all-test-entity
 			 '()
-			 (mapcar #'find-class '(test-entity-repository test-entity))
+			 (mapcar #'find-class '(test-entity-repository))
 			 nil)))
 
-(test load-data-method-is-load-test-entity-data
-  (is-true (find-method #'load-test-entity-data
+(test update-entity-method-is-update-test-entity
+  (is-true (find-method #'update-test-entity
+                        '()
+                        (mapcar #'find-class '(test-entity-repository test-entity))
+                        nil)))
+
+(test delete-method-is-remove-test-entity
+  (is-true (find-method #'remove-test-entity
 			'()
 			(mapcar #'find-class '(test-entity-repository test-entity))
 			nil)))
 
-(test save-data-method-is-save-test-entity-data
-  (is-true (find-emthod #'save-test-entity-data
+(test initialize-repository-method-is-initialize-test-entity-repository
+  (is-true (find-method #'initialize-test-entity-repository
 			'()
-			(mapcar #'find-class '(test-entity-repository test-entity))
+			(mapcar #'find-class '(test-entity-repository))
 			nil)))
 
 (test can-add-entity-to-repository
@@ -68,7 +68,7 @@
 (test can-find-entity-by-id
       (with-repository (
 			(add-test-entity repo test-entity-1)
-			(is (uuid= (id test-entity-1) 
+			(is (uuid= (id test-entity-1)
 				   (id (find-test-entity-by-id repo (id test-entity-1))))))))
 
 (test can-delete-entity-from-repository
@@ -96,8 +96,7 @@
 			(save-data repo)
 			(is-true (probe-file "TEST-ENTITY-REPOSITORY.data"))
 			(delete-file (probe-file "TEST-ENTITY-REPOSITORY.data")))))
-		    
+
 (test can-determine-if-entity-is-in-repo
       (with-repository ((add-test-entity repo test-entity-1)
 			(is-true (test-entity-exists-? repo test-entity-1 )))))
-
