@@ -1,7 +1,5 @@
 (in-package :cl-ddd-test)
 
-(def-suite service-test-suite :description "Testing the functionalit of defining a service")
-
 (in-suite service-test-suite)
 
 (defmacro with-service(body)
