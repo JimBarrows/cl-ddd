@@ -3,10 +3,6 @@
 
 (in-suite entity-test-suite)
 
-(cl-ddd:defentity test-entity ()
-       ((slot1 )
-        (slot2 )))
-
 (defmacro with-repository (body)
   `(let ((test-entity-1 (make-instance 'test-entity))
          (*test-entity-repository* (make-instance 'test-entity-repository)))

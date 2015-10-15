@@ -2,4 +2,4 @@
 
 (defpackage cl-ddd
 	(:use :cl :cl-store :uuid :cl-json)
-	(:export defentity id))
+	(:export defentity defentityapi id))
