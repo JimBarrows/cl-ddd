@@ -27,4 +27,18 @@
                             (car 
                              (cl-json:decode-json-from-string 
                               (drakma:http-request "http://localhost:5000/api/test-entity"))))))))))))
+
+(test post-request-to-the-base-url-add-an-entity-to-the-repository
+  (with-harness
+      ((let* ((response (drakma:http-request "http://localhost:5000/api/test-entity"
+                                             :method :post
+                                             :parameters '(("slot1" . "test-2-slot1")
+                                                           ("slot2" . "test-2-slot2"))))
+              (json (cl-json:decode-json-from-string response))
+              (saved-entity (car (find-all-test-entity *test-entity-repository*))))
+         (format t "###########response: ~A" response)
+         (is-false (nil-p saved-entity))
+         (is-true (uuid= (id saved-entity) (make-uuid-from-string (cdr (assoc :id json)))))
+         (is (string= (slot1 saved-entity) "test-2-slot1"))
+         (is (string= (slot2 saved-entity) "test-2-slot1"))))))
      
