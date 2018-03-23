@@ -17,4 +17,3 @@
 (defclass money()
   ((locale :type 'locale :initarg locale)
    (value :type floating-point-number :initarg value)))
-    
