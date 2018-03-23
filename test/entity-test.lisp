@@ -52,6 +52,7 @@
 
 (test can-add-entity-to-repository
       (with-repository
+<<<<<<< HEAD
 	  ((add-test-entity repo test-entity-1)
 	   (is (= 1 (list-length (list-test-entity-data repo)))))))
 
@@ -92,6 +93,54 @@
 			(save-data repo)
 			(is-true (probe-file "TEST-ENTITY-REPOSITORY.data"))
 			(delete-file (probe-file "TEST-ENTITY-REPOSITORY.data")))))
+=======
+	  ((add-test-entity *test-entity-repository* test-entity-1)
+	   (is (= 1 (list-length (find-all-test-entity *test-entity-repository*)))))))
+
+
+(test can-update-entity-in-repository
+      (with-repository ((setf (slot1 test-entity-1) "some value")
+                        (update-test-entity *test-entity-repository* test-entity-1)
+			(is (string= "some value"
+                                     (slot1
+                                      (find-test-entity-by-id *test-entity-repository* (cl-ddd::id test-entity-1))))))))
+
+(test can-find-entity-by-id
+      (with-repository (
+			(add-test-entity *test-entity-repository* test-entity-1)
+			(is (uuid= (id test-entity-1)
+				   (id (find-test-entity-by-id *test-entity-repository* (id test-entity-1))))))))
+
+(test can-delete-entity-from-repository
+      (with-repository ((add-test-entity *test-entity-repository* test-entity-1)
+			(add-test-entity *test-entity-repository* (make-instance 'test-entity))
+			(remove-test-entity *test-entity-repository* test-entity-1)
+			(is (= 1 (list-length (find-all-test-entity *test-entity-repository*)))))))
+
+(test can-return-a-list-of-all-entities
+      (with-repository ((add-test-entity *test-entity-repository* test-entity-1)
+			(add-test-entity *test-entity-repository* (make-instance 'test-entity))
+			(is (= 2 (list-length (find-all-test-entity *test-entity-repository*)))))))
+
+(test can-load-entities-into-repository
+      (with-repository ((add-test-entity *test-entity-repository* test-entity-1)
+			(add-test-entity *test-entity-repository* (make-instance 'test-entity))
+			(shutdown-test-entity-repository *test-entity-repository*)
+			(setf (slot-value *test-entity-repository* 'cl-ddd::data) ())
+			(initialize-test-entity-repository *test-entity-repository*)
+			(is (= 2 (list-length (find-all-test-entity *test-entity-repository*)))))))
+
+(test can-save-entities-from-repository
+      (with-repository ((add-test-entity *test-entity-repository* test-entity-1)
+			(add-test-entity *test-entity-repository* (make-instance 'test-entity))
+			(shutdown-test-entity-repository *test-entity-repository*)
+			(is-true (probe-file "test-entity-repository.data"))
+			(delete-file (probe-file "test-entity-repository.data")))))
+
+(test can-determine-if-entity-is-in-repo
+      (with-repository ((add-test-entity *test-entity-repository* test-entity-1)
+			(is-true (test-entity-exists-? *test-entity-repository* test-entity-1 )))))
+>>>>>>> b6ea52c3d880ca1f3de3c67ed3526d070cea21d4
 
 (test can-determine-if-entity-is-in-repo
       (with-repository ((add-test-entity repo test-entity-1)
