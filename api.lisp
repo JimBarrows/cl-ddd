@@ -11,7 +11,7 @@
   (let* ((repository-var-name (cl-ddd::repository-var entity))
          (repository-find-all (find-all-method entity))
          (base-url (string-downcase (concatenate 'string "/api/" (string entity)))))
-    `(setf (ningle:route cl::*app* ,base-url :method :GET)
+    `(setf (ningle:route *app* ,base-url :method :GET)
           (lambda (params)
             (cl-json:encode-json-to-string (,repository-find-all ,repository-var-name))))))
 
@@ -20,13 +20,14 @@
          (base-url (string-downcase (concatenate 'string "/api/" (string entity))))
          (progn-statement '(progn)))
 
-    `(setf (ningle:route cl::*app* ,base-url :method :post)
+    `(setf (ningle:route *app* ,base-url :method :post)
            (lambda (params)
              ,(append `(let ((new-entity (make-instance ',entity))))
                      (loop
-                       for slot in (ccl:class-slots (find-class entity))
-                       collect `(setf (,(ccl:slot-definition-name slot) new-entity)
-                                      (cdr (assoc ,(string (ccl:slot-definition-name slot)) params :test #'string=)))))))))
+                       for slot in (cl-user:class-slots (find-class entity))
+                       collect `(setf (,(cl:slot-definition-name slot) new-entity)
+                                      (cdr (assoc ,(string (cl:slot-definition-name slot)) params :test #'string=))))
+                     `((,(add-entity-method entity) ,repository-var-name new-entity)))))))
 
 (defmacro defentityapi (entity)
   `(def-post-entity  ,entity))
