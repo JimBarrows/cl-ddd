@@ -1,6 +1,5 @@
-(in-package :cl-user)
+; (in-package :cl-user)
 
 (defpackage cl-ddd
-	(:use :cl :cl-store :uuid :cl-json)
-	(:export defentity defentityapi id))
-
+  (:use :cl :cl-store :uuid :cl-json)
+  (:export defentity defentityapi id))
