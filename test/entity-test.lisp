@@ -98,9 +98,4 @@
 (test can-determine-if-entity-is-in-repo
       (with-repository ((add-test-entity *test-entity-repository* test-entity-1)
 			(is-true (test-entity-exists-? *test-entity-repository* test-entity-1 )))))
-=======
->>>>>>> entity tests work, except for some file permissions issues writing files to the disk.
 
-(test can-determine-if-entity-is-in-repo
-      (with-repository ((add-test-entity repo test-entity-1)
-			(is-true (test-entity-exists-? repo test-entity-1 )))))

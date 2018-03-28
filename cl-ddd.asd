@@ -1,4 +1,4 @@
-;(in-package :cl)
+(in-package :cl-user)
 
 (defpackage :cl-ddd-asdf
   (:use :cl :asdf))
