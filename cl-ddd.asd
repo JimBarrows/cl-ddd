@@ -13,11 +13,11 @@
                "ningle"
                "cl-json"
                "clack")
-  :components ((:file "package")
-               (:file "types")
-               (:file "entity")
-               (:file "api")
-               (:file "constants")))
+  :components ((:file "src/package")
+               (:file "src/types")
+               (:file "src/entity")
+               (:file "src/api")
+               (:file "src/constants")))
 
 (defsystem "cl-ddd-test"
            :serial t
